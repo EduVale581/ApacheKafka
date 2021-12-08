@@ -1,0 +1,28 @@
+# iniciar zookeper y kafka 
+zookeeper-server-start.bat ..\..\config\zookeeper.properties
+
+# iniciar brokers
+kafka-server-start.bat ..\..\config\serve-0.properties
+kafka-server-start.bat ..\..\config\serve-1.properties
+kafka-server-start.bat ..\..\config\serve-2.properties
+
+# creacion de topic valid-transactions con un factor de replicacion 3 y 3 particiones
+kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 3 --partitions 3 --topic valid-transactions
+
+# creacion de topic suspicious-transactions con un factor de replicacion 3 y 2 particiones
+kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 3 --partitions 2 --topic suspicious-transactions
+
+# Verificar creacion de topics
+kafka-topics.bat --list --bootstrap-server localhost:9092
+
+# Descripcion de topic valid-transactions
+kafka-topics.bat --bootstrap-server localhost:9092 --describe --topic valid-transactions
+
+# Descripcion de topic suspicious-transactions
+kafka-topics.bat --bootstrap-server localhost:9092 --describe --topic suspicious-transactions
+
+# Inciar console producer
+kafka-console-producer.bat --broker-list localhost:9092 --topic suspicious-transactions
+
+# Inciar console consumer
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic suspicious-transactions
